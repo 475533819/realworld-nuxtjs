@@ -84,7 +84,12 @@
                     username: article.author.username,
                   },
                 }"
-                ><img :src="article.author.image"
+                ><img
+                  :src="
+                    article.author.image
+                      ? article.author.image
+                      : 'https://static.productionready.io/images/smiley-cyrus.jpg'
+                  "
               /></nuxt-link>
               <div class="info">
                 <nuxt-link

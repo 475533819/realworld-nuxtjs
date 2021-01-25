@@ -6,11 +6,14 @@
           class="form-control"
           placeholder="Write a comment..."
           rows="3"
+          v-model="body"
         ></textarea>
       </div>
       <div class="card-footer">
         <img :src="$store.state.user.image" class="comment-author-img" />
-        <button class="btn btn-sm btn-primary">Post Comment</button>
+        <button @click="addComment" class="btn btn-sm btn-primary">
+          Post Comment
+        </button>
       </div>
     </form>
 
@@ -44,14 +47,19 @@
         >
           {{ comment.author.username }}
         </nuxt-link>
-        <span class="date-posted">{{comment.createdAt | date('MMM DD, YYYY')}}</span>
+        <span class="date-posted">{{
+          comment.createdAt | date("MMM DD, YYYY")
+        }}</span>
+        <span class="mod-options" v-if="isEditor(comment.author.username)" @click="deleteComment(comment.id)">
+          <i class="ion-trash-a"></i>
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getComments } from "@/api/article";
+import { getComments, addComments, deleteComments } from "@/api/article";
 export default {
   name: "ArticleComponents",
   props: {
@@ -60,14 +68,38 @@ export default {
       required: true,
     },
   },
+  computed: {
+    isEditor() {
+      return (name) => this.$store.state.user.username === name;
+    },
+  },
   data() {
     return {
       comments: [],
+      body: "",
     };
   },
   async mounted() {
-    const { data } = await getComments(this.article.slug);
-    this.comments = data.comments;
+    this.commentsList()
+  },
+  methods: {
+    async commentsList() {
+      const { data } = await getComments(this.article.slug);
+      this.comments = data.comments;
+    },
+    async addComment() {
+      const { data } = await addComments({
+        slug: this.article.slug,
+        comment: { body: this.body },
+      });
+    },
+    async deleteComment(id) {
+      const {data} = await deleteComments({
+        id,
+        slug: this.article.slug
+      })
+      this.commentsList()
+    }
   },
 };
 </script>

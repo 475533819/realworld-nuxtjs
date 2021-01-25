@@ -23,6 +23,7 @@ export default ({ store }) => {
     const { user } = store.state
     if (user && user.token) {
       config.headers.Authorization = `Token ${user.token}`
+      // config.headers['content-Type'] = 'application/json;charset-utf-8'
     }
 
     // 返回 config 请求配置对象
