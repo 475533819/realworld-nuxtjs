@@ -74,6 +74,8 @@ import {
   addFavorite,
   deleteFavorite,
 } from "@/api/article";
+import {mapState} from 'vuex'
+
 export default {
   name: "ArticleMeta",
   props: {
@@ -83,8 +85,11 @@ export default {
     },
   },
   computed: {
+    ...mapState(['user']),
     isEditor() {
-      return this.$store.state.user.username === this.article.author.username;
+      if(this.user) {
+        return this.user.username === this.article.author.username;
+      }
     },
   },
   methods: {

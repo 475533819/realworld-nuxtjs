@@ -5,7 +5,7 @@ const cookieparser = process.server ? require('cookieparser') : undefined
 const state = () => {
   return {
     // 当前登录用户的登录状态
-    user: null
+    user: null,
   }
 }
 

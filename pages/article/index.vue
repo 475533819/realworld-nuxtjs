@@ -21,7 +21,12 @@
 
       <div class="row">
         <div class="col-xs-12 col-md-8 offset-md-2">
-          <ArticleComponents :article="article"/>
+          <ArticleComponents v-if="user" :article="article" />
+          <p show-authed="false" style="display: inherit" v-else>
+            <nuxt-link ui-sref="app.login" to="/login">Sign in</nuxt-link> or
+            <nuxt-link ui-sref="app.register" to="/register">sign up</nuxt-link> to add
+            comments on this article.
+          </p>
         </div>
       </div>
     </div>
@@ -32,7 +37,8 @@
 import { getArticle } from "@/api/article";
 import MarkdownIt from "markdown-it";
 import ArticleMeta from "./components/article-meta";
-import ArticleComponents from './components/article-components'
+import ArticleComponents from "./components/article-components";
+import { mapState } from "vuex";
 
 export default {
   name: "ArticleIndex",
@@ -45,9 +51,12 @@ export default {
       article,
     };
   },
+  computed: {
+    ...mapState(["user"]),
+  },
   components: {
     ArticleMeta,
-    ArticleComponents
+    ArticleComponents,
   },
   head() {
     return {
